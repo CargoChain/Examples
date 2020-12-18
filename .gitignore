@@ -1,0 +1,36 @@
+# =======================================
+# Visual Studo 2015 cache/options directory
+.vs/
+
+# =======================================
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]ogs/
+
+# =======================================
+# User-specific files
+out/
+*.suo
+*.user
+*.userosscache
+*project.lock.json
+.nuget
+.build
+.docker
+.data
+_temp_docker
+packages
+_Temp
+*.vspx
+*.orig
+
+npm-debug.log
