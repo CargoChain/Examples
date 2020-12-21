@@ -1,4 +1,5 @@
-﻿using eShop.Models;
+﻿using eShop.Data;
+using eShop.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,25 +13,35 @@ namespace eShop.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ShopContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ShopContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            return View();
-        }
+            var products = _context.Products.FindAll().ToList();
 
-        public IActionResult Privacy()
-        {
-            return View();
+            return View(products);
         }
 
         public IActionResult Add()
         {
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Add(Product product)
+        {
+            product.Id = Guid.NewGuid();
+            product.State = ProductState.Available;
+            _context.Products.Insert(product);
+
+            return RedirectToAction(nameof(Index));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

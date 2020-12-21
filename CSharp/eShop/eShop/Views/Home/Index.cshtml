@@ -1,17 +1,37 @@
-﻿@{
+﻿@model IEnumerable<eShop.Models.Product>
+
+@{
     ViewData["Title"] = "Products";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Products</h1>
+<div>
+    <div class="row align-items-center">
+        <h1 class="display-4 col-sm-8">Products</h1>
+        <div class="col-sm-4 text-right">
+            <a class="btn btn-primary" asp-area="" asp-controller="Home" asp-action="Add">Add new product</a>
+        </div>
+    </div>
+
     <table class="table mt-4">
         <thead>
             <tr>
                 <th>Name</th>
                 <th>Description</th>
                 <th>Price</th>
+                <th>Status</th>
             </tr>
         </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Description</td>
+                <td>@product.Price</td>
+                <td>@product.State</td>
+            </tr>
+            }
+        </tbody>
     </table>
     @*<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
 </div>
