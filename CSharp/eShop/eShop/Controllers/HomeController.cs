@@ -23,7 +23,10 @@ namespace eShop.Controllers
 
         public IActionResult Index()
         {
-            var products = _context.Products.FindAll().ToList();
+            var products = _context.Products
+                .FindAll()
+                .OrderBy(x => x.Name)
+                .ToList();
 
             return View(products);
         }
@@ -40,6 +43,23 @@ namespace eShop.Controllers
             product.Id = Guid.NewGuid();
             product.State = ProductState.Available;
             _context.Products.Insert(product);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Order(Guid id)
+        {
+            var product = _context.Products.FindById(id);
+            return View(product);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Order(Product product)
+        {
+            product.State = ProductState.Ordered;
+            _context.Products.Update(product);
+            //_context.Products.Insert(product);
 
             return RedirectToAction(nameof(Index));
         }

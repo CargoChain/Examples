@@ -19,6 +19,7 @@
                 <th>Description</th>
                 <th>Price</th>
                 <th>Status</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -28,10 +29,19 @@
                 <td>@product.Name</td>
                 <td>@product.Description</td>
                 <td>@product.Price</td>
-                <td>@product.State</td>
+                <td>
+                    <span class="badge @(product.State == ProductState.Available ? "bg-primary" : (product.State == ProductState.Ordered ? "bg-warning" : "bg-success"))">@product.State</span>
+                </td>
+                <td class="text-right">
+                    @if (product.State == ProductState.Available)
+                    {
+                        <a class="mr-3" asp-area="" asp-controller="Home" asp-action="Order" asp-route-id="@product.Id">Order</a>
+                    }
+
+                    <a target="_blank" href="#">View profile</a>
+                </td>
             </tr>
             }
         </tbody>
     </table>
-    @*<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
 </div>

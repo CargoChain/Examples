@@ -75,3 +75,7 @@ body {
     font-weight: bold;
     color: #dc3545;
 }
+
+.bg-primary {
+    color: #FFF;
+}

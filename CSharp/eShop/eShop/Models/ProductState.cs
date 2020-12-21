@@ -3,7 +3,7 @@
     public enum ProductState
     {
         Available,
-        Purchased,
+        Ordered,
         Delivered
     }
 }
