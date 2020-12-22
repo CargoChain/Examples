@@ -15,5 +15,7 @@ namespace eShop.Models
         [Display(Name = "Delivery Address")]
         public string DeliveryAddress { get; set; }
         public ProductState State { get; set; }
+        public string CargoChainProfilePublicId { get; set; }
+        public string CargoChainProfileSecretId { get; set; }
     }
 }

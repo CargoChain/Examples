@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace eShop.Controllers
 {
@@ -38,10 +39,15 @@ namespace eShop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Add(Product product)
+        public async Task<IActionResult> Add(Product product)
         {
             product.Id = Guid.NewGuid();
             product.State = ProductState.Available;
+
+            var cargoChainProfile = await _cargoChainService.CreateProductProfile(product);
+            product.CargoChainProfilePublicId = cargoChainProfile.ProfilePublicId;
+            product.CargoChainProfileSecretId = cargoChainProfile.ProfileSecretId;
+
             _context.Products.Insert(product);
 
             return RedirectToAction(nameof(Index));

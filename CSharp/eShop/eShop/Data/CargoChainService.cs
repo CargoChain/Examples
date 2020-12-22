@@ -1,9 +1,10 @@
 ﻿using CargoChain.Sdk.CSharp;
+using CargoChain.Sdk.CSharp.Messages;
+using CargoChain.Sdk.CSharp.Messages.Profiles;
+using eShop.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -24,10 +25,109 @@ namespace eShop.Data
         private CargoChainClient _apiClient;
         private static HttpClient _portalClient;
 
-        public CargoChainService()
+        public CargoChainService(ILogger<CargoChainService> logger)
         {
+            _logger = logger;
             InitializePortalClient();
             InitializeApiClient();
+        }
+
+        public async Task<ProfileResponse> CreateProductProfile(Product product)
+        {
+            var profileResult = await _apiClient.Profile.CreateProfiles(new CreateProfilesRequest[]
+            {
+                new CreateProfilesRequest
+                {
+                    Alias = product.Id.ToString(),
+                    ProfileType = "eShopProduct",
+                    Events = new EventRequest[]
+                    {
+                        GetProductInformationEventRequest(product),
+                        GetProductStateEventRequest(product.State)
+                    }
+                }
+            });
+
+            ValidateCargoChainApiResponse(profileResult, nameof(CreateProductProfile));
+
+            return profileResult.Data[0];
+        }
+
+        public async Task<AddEventsResponse> UpdateProfileState(string profileSecretId, ProductState state)
+        {
+            var addEventResult = await _apiClient.Profile.AddEvents(new AddEventsRequest[]
+            {
+                new AddEventsRequest
+                {
+                    ProfileSecretId = profileSecretId,
+                    Events = new EventRequest[]
+                    {
+                        GetProductStateEventRequest(state)
+                    }
+                }
+            });
+
+            ValidateCargoChainApiResponse(addEventResult, nameof(UpdateProfileState));
+
+            return addEventResult.Data[0];
+        }
+
+        private EventRequest GetProductInformationEventRequest(Product product)
+        {
+            return new EventRequest
+            {
+                EventType = "ProductInformation",
+                Visibility = EventVisibility.Public,
+                Properties = new EventPropertyRequest[]
+                {
+                    new EventPropertyRequest
+                    {
+                        DataType = "text",
+                        Value = product.Name,
+                        Name = "Name"
+                    },
+                    new EventPropertyRequest
+                    {
+                        DataType = "text",  
+                        Value = product.Description,
+                        Name = "Description"
+                    },
+                    new EventPropertyRequest
+                    {
+                        DataType = "decimal",
+                        Value = product.Price.ToString(),
+                        Name = "Price"
+                    }
+                }
+            };
+        }
+
+        private EventRequest GetProductStateEventRequest(ProductState state)
+        {
+            return new EventRequest
+            {
+                EventType = "ProductState",
+                Visibility = EventVisibility.Public,
+                Properties = new EventPropertyRequest[]
+                {
+                    new EventPropertyRequest
+                    {
+                        DataType = "text",
+                        Value = state.ToString(),
+                        Name = "State"
+                    }
+                }
+            };
+        }
+
+        private void ValidateCargoChainApiResponse(IResponse response, string method)
+        {
+            if (!response.IsSuccess)
+            {
+                var message = $"Unexpected error in {method}. The CargoChain API call has failed: {response.Message}";
+                _logger.LogError(message);
+                throw new ApplicationException(message);
+            }
         }
 
         private void InitializePortalClient()
