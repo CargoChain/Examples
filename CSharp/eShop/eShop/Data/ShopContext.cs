@@ -1,15 +1,12 @@
 ﻿using eShop.Models;
 using LiteDB;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace eShop.Data
 {
     public class ShopContext : IDisposable
     {
-        private LiteDatabase _db;
+        private readonly LiteDatabase _db;
 
         public ILiteCollection<Product> Products => _db.GetCollection<Product>("products");
 
@@ -20,7 +17,7 @@ namespace eShop.Data
 
         public void Dispose()
         {
-            _db.Dispose();
+            _db?.Dispose();
         }
     }
 }

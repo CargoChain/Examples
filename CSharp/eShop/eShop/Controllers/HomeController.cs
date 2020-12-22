@@ -3,10 +3,8 @@ using eShop.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace eShop.Controllers
 {
@@ -14,11 +12,13 @@ namespace eShop.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ShopContext _context;
+        private readonly CargoChainService _cargoChainService;
 
-        public HomeController(ILogger<HomeController> logger, ShopContext context)
+        public HomeController(ILogger<HomeController> logger, ShopContext context, CargoChainService cargoChainService)
         {
             _logger = logger;
             _context = context;
+            _cargoChainService = cargoChainService;
         }
 
         public IActionResult Index()

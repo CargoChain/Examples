@@ -24,6 +24,7 @@ namespace eShop
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<ShopContext>();
+            services.AddSingleton<CargoChainService>();
             services.AddControllersWithViews();
         }
 
