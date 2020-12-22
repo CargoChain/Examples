@@ -57,9 +57,10 @@ namespace eShop.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Order(Product product)
         {
-            product.State = ProductState.Ordered;
-            _context.Products.Update(product);
-            //_context.Products.Insert(product);
+            var dbProduct = _context.Products.FindById(product.Id);
+            dbProduct.DeliveryAddress = product.DeliveryAddress;
+            dbProduct.State = ProductState.Ordered;
+            _context.Products.Update(dbProduct);
 
             return RedirectToAction(nameof(Index));
         }
