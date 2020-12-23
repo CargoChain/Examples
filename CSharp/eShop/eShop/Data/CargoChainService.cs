@@ -2,7 +2,9 @@
 using CargoChain.Sdk.CSharp.Messages;
 using CargoChain.Sdk.CSharp.Messages.Profiles;
 using eShop.Models;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
@@ -21,12 +23,14 @@ namespace eShop.Data
             public int ExpiresIn { get; set; }
         }
 
+        private readonly CargoChainConfiguration _cargoChainConfiguration;
         private readonly ILogger<CargoChainService> _logger;
         private CargoChainClient _apiClient;
         private static HttpClient _portalClient;
 
-        public CargoChainService(ILogger<CargoChainService> logger)
+        public CargoChainService(IOptionsMonitor<CargoChainConfiguration> optionsMonitor, ILogger<CargoChainService> logger)
         {
+            _cargoChainConfiguration = optionsMonitor.CurrentValue;
             _logger = logger;
             InitializePortalClient();
             InitializeApiClient();
@@ -68,6 +72,39 @@ namespace eShop.Data
             });
 
             ValidateCargoChainApiResponse(addEventResult, nameof(UpdateProfileState));
+
+            return addEventResult.Data[0];
+        }
+
+        public async Task<AddEventsResponse> OrderProductProfile(Product product)
+        {
+            var addEventResult = await _apiClient.Profile.AddEvents(new AddEventsRequest[]
+            {
+                new AddEventsRequest
+                {
+                    ProfileSecretId = product.CargoChainProfileSecretId,
+                    Events = new EventRequest[]
+                    {
+                        new EventRequest
+                        {
+                            EventType = "DeliveryAddress",
+                            Visibility = EventVisibility.Public,
+                            Properties = new EventPropertyRequest[]
+                            {
+                                new EventPropertyRequest
+                                {
+                                    DataType = "address",
+                                    Value = product.DeliveryAddress,
+                                    Name = "DeliveryAddress"
+                                }
+                            }
+                        },
+                        GetProductStateEventRequest(product.State)
+                    }
+                }
+            });
+
+            ValidateCargoChainApiResponse(addEventResult, nameof(OrderProductProfile));
 
             return addEventResult.Data[0];
         }
@@ -133,12 +170,12 @@ namespace eShop.Data
         private void InitializePortalClient()
         {
             _portalClient = new HttpClient();
-            _portalClient.BaseAddress = new Uri(@"https://portal-tests.cargochain.com");
+            _portalClient.BaseAddress = _cargoChainConfiguration.PortalUrl;
         }
 
         private void InitializeApiClient()
         {
-            _apiClient = new CargoChainClient(@"https://api2-tests.cargochain.com");
+            _apiClient = new CargoChainClient(_cargoChainConfiguration.ApiUrl);
             SetApiClientAccessToken();
             _apiClient.AccessTokenExpired += (s, e) =>
             {
@@ -148,13 +185,13 @@ namespace eShop.Data
 
         private void SetApiClientAccessToken()
         {
-            var valueToEncode = Encoding.UTF8.GetBytes("CA-BN5UL-9QDHZ:12ABB3635A59B3F8EFE1A53497F4F4699859A16C7FA2F87725EFAF9ED66CFC38");
+            var valueToEncode = Encoding.UTF8.GetBytes($"{_cargoChainConfiguration.ClientId}:{_cargoChainConfiguration.ClientSecret}");
             var encodedValue = Convert.ToBase64String(valueToEncode);
 
             using (var requestMessage = new HttpRequestMessage(HttpMethod.Post, "/runAs"))
             {
                 requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Basic", encodedValue);
-                requestMessage.Content = new StringContent("HZQrEGxjgVOUhjAwW7iXkFbDA5fXOTpW");
+                requestMessage.Content = new StringContent(_cargoChainConfiguration.RunAsKey);
                 try
                 {
                     var response = _portalClient.SendAsync(requestMessage).Result.Content.ReadAsStringAsync().Result;

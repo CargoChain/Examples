@@ -2,6 +2,7 @@
 using eShop.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -14,9 +15,15 @@ namespace eShop.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ShopContext _context;
         private readonly CargoChainService _cargoChainService;
+        private readonly CargoChainConfiguration _cargoChainConfiguration;
 
-        public HomeController(ILogger<HomeController> logger, ShopContext context, CargoChainService cargoChainService)
+        public HomeController(
+            ILogger<HomeController> logger,
+            ShopContext context,
+            CargoChainService cargoChainService,
+            IOptionsMonitor<CargoChainConfiguration> optionsMonitor)
         {
+            _cargoChainConfiguration = optionsMonitor.CurrentValue;
             _logger = logger;
             _context = context;
             _cargoChainService = cargoChainService;
@@ -28,6 +35,8 @@ namespace eShop.Controllers
                 .FindAll()
                 .OrderBy(x => x.Name)
                 .ToList();
+
+            ViewBag.PublicViewUrl = _cargoChainConfiguration.PublicViewUrl;
 
             return View(products);
         }
@@ -61,11 +70,13 @@ namespace eShop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Order(Product product)
+        public async Task<IActionResult> Order(Product product)
         {
             var dbProduct = _context.Products.FindById(product.Id);
             dbProduct.DeliveryAddress = product.DeliveryAddress;
             dbProduct.State = ProductState.Ordered;
+
+            await _cargoChainService.OrderProductProfile(dbProduct);
             _context.Products.Update(dbProduct);
 
             return RedirectToAction(nameof(Index));

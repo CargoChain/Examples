@@ -15,11 +15,12 @@
     <table class="table mt-4">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Status</th>
-                <th></th>
+                <th style="width: 15%">Name</th>
+                <th style="width: 20%">Description</th>
+                <th style="width: 10%">Price</th>
+                <th style="width: 10%">Status</th>
+                <th style="width: 20%">CargoChain Public Id</th>
+                <th style="width: 25%"></th>
             </tr>
         </thead>
         <tbody>
@@ -32,13 +33,14 @@
                 <td>
                     <span class="badge @(product.State == ProductState.Available ? "bg-primary" : (product.State == ProductState.Ordered ? "bg-warning" : "bg-success"))">@product.State</span>
                 </td>
+                <td>@product.CargoChainProfilePublicId</td>
                 <td class="text-right">
                     @if (product.State == ProductState.Available)
                     {
-                        <a class="mr-3" asp-area="" asp-controller="Home" asp-action="Order" asp-route-id="@product.Id">Order</a>
+                        <a class="mr-3 font-weight-bold" asp-area="" asp-controller="Home" asp-action="Order" asp-route-id="@product.Id">Order</a>
                     }
 
-                    <a target="_blank" href="#">View profile</a>
+                    <a target="_blank" href="@(ViewBag.PublicViewUrl + product.CargoChainProfilePublicId)">View in CargoChain</a>
                 </td>
             </tr>
             }

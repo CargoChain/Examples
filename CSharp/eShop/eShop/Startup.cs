@@ -4,10 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace eShop
 {
@@ -23,8 +19,11 @@ namespace eShop
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<CargoChainConfiguration>(Configuration.GetSection("CargoChain"));
+
             services.AddSingleton<ShopContext>();
             services.AddSingleton<CargoChainService>();
+
             services.AddControllersWithViews();
         }
 
