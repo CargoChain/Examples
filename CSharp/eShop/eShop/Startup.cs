@@ -1,3 +1,4 @@
+using eShop.Lib;
 using eShop.Shop.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

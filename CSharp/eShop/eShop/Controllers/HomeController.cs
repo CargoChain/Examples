@@ -1,4 +1,5 @@
-﻿using eShop.Shop.Data;
+﻿using eShop.Lib;
+using eShop.Shop.Data;
 using eShop.Shop.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

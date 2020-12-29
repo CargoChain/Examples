@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace eShop.Shop
+namespace eShop.Lib
 {
     public class CargoChainConfiguration
     {
