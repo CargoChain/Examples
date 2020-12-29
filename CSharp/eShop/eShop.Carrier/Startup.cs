@@ -1,3 +1,4 @@
+using eShop.Carrier.Data;
 using eShop.Lib;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,11 +22,14 @@ namespace eShop.Carrier
         {
             services.Configure<CargoChainConfiguration>(Configuration.GetSection("CargoChain"));
 
+            services.AddSingleton<CarrierContext>();
+            services.AddSingleton<CargoChainService>();
+
             services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime lifetime, CargoChainService service)
         {
             if (env.IsDevelopment())
             {
@@ -47,6 +51,8 @@ namespace eShop.Carrier
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            lifetime.ApplicationStarted.Register(async () => await service.EnsureProfilesSubscription());
         }
     }
 }

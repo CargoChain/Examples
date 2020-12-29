@@ -10,5 +10,6 @@ namespace eShop.Lib
         public Uri PortalUrl { get; set; }
         public Uri ApiUrl { get; set; }
         public Uri PublicViewUrl { get; set; }
+        public Uri WebHookUrl { get; set; }
     }
 }

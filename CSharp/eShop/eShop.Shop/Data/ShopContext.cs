@@ -12,7 +12,7 @@ namespace eShop.Shop.Data
 
         public ShopContext()
         {
-            _db = new LiteDatabase(@"eshop.db");
+            _db = new LiteDatabase(@"shop.db");
         }
 
         public void Dispose()
