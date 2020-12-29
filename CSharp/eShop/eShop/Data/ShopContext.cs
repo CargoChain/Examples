@@ -1,8 +1,8 @@
-﻿using eShop.Models;
+﻿using eShop.Shop.Models;
 using LiteDB;
 using System;
 
-namespace eShop.Data
+namespace eShop.Shop.Data
 {
     public class ShopContext : IDisposable
     {

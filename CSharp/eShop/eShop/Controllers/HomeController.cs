@@ -1,5 +1,5 @@
-﻿using eShop.Data;
-using eShop.Models;
+﻿using eShop.Shop.Data;
+using eShop.Shop.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace eShop.Controllers
+namespace eShop.Shop.Controllers
 {
     public class HomeController : Controller
     {

@@ -1,7 +1,7 @@
 ﻿using CargoChain.Sdk.CSharp;
 using CargoChain.Sdk.CSharp.Messages;
 using CargoChain.Sdk.CSharp.Messages.Profiles;
-using eShop.Models;
+using eShop.Shop.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -12,7 +12,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace eShop.Data
+namespace eShop.Shop.Data
 {
     public class CargoChainService : IDisposable
     {

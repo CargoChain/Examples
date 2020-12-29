@@ -1,4 +1,4 @@
-﻿using eShopCarrier.Models;
+﻿using eShop.Carrier.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace eShopCarrier.Controllers
+namespace eShop.Carrier.Controllers
 {
     public class HomeController : Controller
     {
