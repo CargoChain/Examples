@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 using CargoChain.Sdk.CSharp;
 using CargoChain.Sdk.CSharp.Messages;
 using CargoChain.Sdk.CSharp.Messages.Profiles;
@@ -34,6 +35,25 @@ namespace eShop.Lib
             InitializeApiClient();
         }
 
+        public async Task<AddEventsResponse> UpdateProfileState(string profileSecretId, ProductState state)
+        {
+            var addEventResult = await ApiClient.Profile.AddEvents(new AddEventsRequest[]
+            {
+                new AddEventsRequest
+                {
+                    ProfileSecretId = profileSecretId,
+                    Events = new EventRequest[]
+                    {
+                        GetProductStateEventRequest(state)
+                    }
+                }
+            });
+
+            ValidateCargoChainApiResponse(addEventResult, nameof(UpdateProfileState));
+
+            return addEventResult.Data[0];
+        }
+
         public string GetPropertyValue(EventResponse evt, string propertyName)
         {
             return JsonConvert.DeserializeObject<string>(evt.EventBody.Properties.First(x => x.Name.Equals(propertyName)).JsonValue);
@@ -47,6 +67,24 @@ namespace eShop.Lib
                 Logger.LogError(message);
                 throw new ApplicationException(message);
             }
+        }
+
+        protected EventRequest GetProductStateEventRequest(ProductState state)
+        {
+            return new EventRequest
+            {
+                EventType = ProductEventTypes.ProductState,
+                Visibility = EventVisibility.Public,
+                Properties = new EventPropertyRequest[]
+                {
+                    new EventPropertyRequest
+                    {
+                        DataType = "text",
+                        Value = state.ToString(),
+                        Name = "State"
+                    }
+                }
+            };
         }
 
         private void InitializePortalClient()

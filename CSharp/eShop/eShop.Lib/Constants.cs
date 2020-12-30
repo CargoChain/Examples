@@ -10,6 +10,7 @@
         public const string ProductState = "ProductState";
         public const string DeliveryAddress = "DeliveryAddress";
         public const string ProductInformation = "ProductInformation";
+        public const string ProductPosition = "ProductPosition";
     }
 
     public enum ProductState

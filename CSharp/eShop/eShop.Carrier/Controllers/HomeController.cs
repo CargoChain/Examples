@@ -1,5 +1,6 @@
 ﻿using eShop.Carrier.Data;
 using eShop.Carrier.Models;
+using eShop.Lib;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -14,19 +15,29 @@ namespace eShop.Carrier.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly CarrierContext _context;
+        private readonly CargoChainService _cargoChainService;
+        private readonly CargoChainConfiguration _cargoChainConfiguration;
 
-        public HomeController(ILogger<HomeController> logger, CarrierContext context)
+        public HomeController(
+            ILogger<HomeController> logger,
+            CarrierContext context,
+            CargoChainService cargoChainService,
+            CargoChainConfiguration cargoChainConfiguration)
         {
             _logger = logger;
             _context = context;
+            _cargoChainService = cargoChainService;
+            _cargoChainConfiguration = cargoChainConfiguration;
         }
 
         public IActionResult Index()
         {
             var products = _context.Products
-                .Find(x => x.State == Lib.ProductState.Ordered)
+                .Find(x => x.State == ProductState.Ordered)
                 .OrderBy(x => x.Name)
                 .ToList();
+
+            ViewBag.PublicViewUrl = _cargoChainConfiguration.PublicViewUrl;
 
             return View(products);
         }
@@ -34,9 +45,11 @@ namespace eShop.Carrier.Controllers
         public IActionResult Delivered()
         {
             var products = _context.Products
-                .Find(x => x.State == Lib.ProductState.Delivered)
+                .Find(x => x.State == ProductState.Delivered)
                 .OrderBy(x => x.Name)
                 .ToList();
+
+            ViewBag.PublicViewUrl = _cargoChainConfiguration.PublicViewUrl;
 
             return View(products);
         }
@@ -56,7 +69,7 @@ namespace eShop.Carrier.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddPosition(ProductPositionViewModel model)
+        public async Task<IActionResult> AddPosition(ProductPositionViewModel model)
         {
             var dbProduct = _context.Products.FindById(model.Product.Id);
             if (dbProduct.Positions == null)
@@ -66,6 +79,14 @@ namespace eShop.Carrier.Controllers
             model.Position.Id = Guid.NewGuid();
             model.Position.PositionAt = DateTimeOffset.Now;
             dbProduct.Positions.Add(model.Position);
+
+            await _cargoChainService.AddProductPosition(dbProduct.CargoChainProfileSecretId, model.Position);
+
+            if (model.Position.ProductDelivered)
+            {
+                dbProduct.State = ProductState.Delivered;
+                await _cargoChainService.UpdateProfileState(dbProduct.CargoChainProfileSecretId, dbProduct.State);
+            }
 
             _context.Products.Update(dbProduct);
 

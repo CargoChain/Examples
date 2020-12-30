@@ -76,6 +76,6 @@ body {
     color: #dc3545;
 }
 
-.bg-primary {
+.bg-primary, .bg-success {
     color: #FFF;
 }

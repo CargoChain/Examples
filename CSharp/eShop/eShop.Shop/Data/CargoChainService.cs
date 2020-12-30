@@ -32,25 +32,6 @@ namespace eShop.Shop.Data
             return profileResult.Data[0];
         }
 
-        public async Task<AddEventsResponse> UpdateProfileState(string profileSecretId, ProductState state)
-        {
-            var addEventResult = await ApiClient.Profile.AddEvents(new AddEventsRequest[]
-            {
-                new AddEventsRequest
-                {
-                    ProfileSecretId = profileSecretId,
-                    Events = new EventRequest[]
-                    {
-                        GetProductStateEventRequest(state)
-                    }
-                }
-            });
-
-            ValidateCargoChainApiResponse(addEventResult, nameof(UpdateProfileState));
-
-            return addEventResult.Data[0];
-        }
-
         public async Task<AddEventsResponse> OrderProductProfile(Product product)
         {
             var addEventResult = await ApiClient.Profile.AddEvents(new AddEventsRequest[]
@@ -109,24 +90,6 @@ namespace eShop.Shop.Data
                         DataType = "decimal",
                         Value = product.Price.ToString(),
                         Name = "Price"
-                    }
-                }
-            };
-        }
-
-        private EventRequest GetProductStateEventRequest(ProductState state)
-        {
-            return new EventRequest
-            {
-                EventType = ProductEventTypes.ProductState,
-                Visibility = EventVisibility.Public,
-                Properties = new EventPropertyRequest[]
-                {
-                    new EventPropertyRequest
-                    {
-                        DataType = "text",
-                        Value = state.ToString(),
-                        Name = "State"
                     }
                 }
             };

@@ -33,7 +33,10 @@
     <div class="row align-items-center mt-4">
         <h3 class="col-sm-8">Position history</h3>
         <div class="col-sm-4 text-right">
-            <a class="btn btn-primary" asp-area="" asp-controller="Home" asp-action="AddPosition" asp-route-id="@Model.Id">Add product position</a>
+            @if (Model.State == eShop.Lib.ProductState.Ordered)
+            {
+                <a class="btn btn-primary" asp-area="" asp-controller="Home" asp-action="AddPosition" asp-route-id="@Model.Id">Add product position</a>
+            }
         </div>
     </div>
 
