@@ -31,11 +31,11 @@
                 <td>@product.Description</td>
                 <td>@product.Price</td>
                 <td>
-                    <span class="badge @(product.State == ProductState.Available ? "bg-primary" : (product.State == ProductState.Ordered ? "bg-warning" : "bg-success"))">@product.State</span>
+                    <span class="badge @(product.State == eShop.Lib.ProductState.Available ? "bg-primary" : (product.State == eShop.Lib.ProductState.Ordered ? "bg-warning" : "bg-success"))">@product.State</span>
                 </td>
                 <td>@product.CargoChainProfilePublicId</td>
                 <td class="text-right">
-                    @if (product.State == ProductState.Available)
+                    @if (product.State == eShop.Lib.ProductState.Available)
                     {
                         <a class="mr-3 font-weight-bold" asp-area="" asp-controller="Home" asp-action="Order" asp-route-id="@product.Id">Order</a>
                     }

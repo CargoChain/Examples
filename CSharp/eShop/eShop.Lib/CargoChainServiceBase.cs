@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using CargoChain.Sdk.CSharp;
 using CargoChain.Sdk.CSharp.Messages;
+using CargoChain.Sdk.CSharp.Messages.Profiles;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 namespace eShop.Lib
@@ -25,12 +26,17 @@ namespace eShop.Lib
         protected ILogger<CargoChainServiceBase> Logger { get; }
         protected CargoChainClient ApiClient { get; private set; }
 
-        public CargoChainServiceBase(IOptionsMonitor<CargoChainConfiguration> optionsMonitor, ILogger<CargoChainServiceBase> logger)
+        public CargoChainServiceBase(CargoChainConfiguration cargoChainConfiguration, ILogger<CargoChainServiceBase> logger)
         {
-            CargoChainConfiguration = optionsMonitor.CurrentValue;
+            CargoChainConfiguration = cargoChainConfiguration;
             Logger = logger;
             InitializePortalClient();
             InitializeApiClient();
+        }
+
+        public string GetPropertyValue(EventResponse evt, string propertyName)
+        {
+            return JsonConvert.DeserializeObject<string>(evt.EventBody.Properties.First(x => x.Name.Equals(propertyName)).JsonValue);
         }
 
         protected void ValidateCargoChainApiResponse(IResponse response, string method)

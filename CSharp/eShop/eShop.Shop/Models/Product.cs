@@ -1,4 +1,5 @@
-﻿using System;
+﻿using eShop.Lib;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace eShop.Shop.Models

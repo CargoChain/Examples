@@ -3,7 +3,6 @@ using eShop.Shop.Data;
 using eShop.Shop.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -22,9 +21,9 @@ namespace eShop.Shop.Controllers
             ILogger<HomeController> logger,
             ShopContext context,
             CargoChainService cargoChainService,
-            IOptionsMonitor<CargoChainConfiguration> optionsMonitor)
+            CargoChainConfiguration cargoChainConfiguration)
         {
-            _cargoChainConfiguration = optionsMonitor.CurrentValue;
+            _cargoChainConfiguration = cargoChainConfiguration;
             _logger = logger;
             _context = context;
             _cargoChainService = cargoChainService;

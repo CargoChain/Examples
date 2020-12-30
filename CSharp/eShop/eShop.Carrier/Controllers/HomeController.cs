@@ -1,4 +1,5 @@
-﻿using eShop.Carrier.Models;
+﻿using eShop.Carrier.Data;
+using eShop.Carrier.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,15 +13,22 @@ namespace eShop.Carrier.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly CarrierContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, CarrierContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var products = _context.Products
+                .Find(x => x.State != Lib.ProductState.Available)
+                .OrderBy(x => x.Name)
+                .ToList();
+
+            return View(products);
         }
 
         public IActionResult Privacy()

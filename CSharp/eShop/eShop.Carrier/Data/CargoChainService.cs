@@ -2,7 +2,6 @@
 using eShop.Carrier.Models;
 using eShop.Lib;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 
 namespace eShop.Carrier.Data
@@ -11,10 +10,36 @@ namespace eShop.Carrier.Data
     {
         private readonly CarrierContext _carrierContext;
 
-        public CargoChainService(CarrierContext carrierContext, IOptionsMonitor<CargoChainConfiguration> optionsMonitor, ILogger<CargoChainServiceBase> logger)
-            : base(optionsMonitor, logger) 
+        public CargoChainService(CarrierContext carrierContext, CargoChainConfiguration cargoChainConfiguration, ILogger<CargoChainServiceBase> logger)
+            : base(cargoChainConfiguration, logger) 
         {
             _carrierContext = carrierContext;
+        }
+
+        public async Task<ProfileResponse> GetProfileByPublicId(string profilePublicId)
+        {
+            var response = await ApiClient.Profile.GetProfileByPublicId(new GetProfileByPublicIdRequest
+            {
+                ProfilePublicId = profilePublicId
+            });
+
+            ValidateCargoChainApiResponse(response, nameof(GetProfileByPublicId));
+
+            return response.Data;
+        }
+
+        public async Task<EventResponse[]> GetEvents(string profileSecretId, string lastEvent)
+        {
+            var response = await ApiClient.Profile.GetEvents(new GetEventsRequest
+            {
+                Count = 100,
+                LastEvent = lastEvent,
+                ProfileSecretId = profileSecretId
+            });
+
+            ValidateCargoChainApiResponse(response, nameof(GetEvents));
+
+            return response.Data;
         }
 
         public async Task EnsureProfilesSubscription()
@@ -24,7 +49,7 @@ namespace eShop.Carrier.Data
                 // Create profile subscription
                 var response = await ApiClient.Profile.RegisterProfileHook(new RegisterProfileHookRequest
                 {
-                    EventTypes = new string[] { "ProductState" },
+                    EventTypes = new string[] { ProductEventTypes.ProductState },
                     Uri = CargoChainConfiguration.WebHookUrl.ToString()
                 });
 

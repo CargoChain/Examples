@@ -2,15 +2,14 @@
 using eShop.Lib;
 using eShop.Shop.Models;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 
 namespace eShop.Shop.Data
 {
     public class CargoChainService : CargoChainServiceBase
     {
-        public CargoChainService(IOptionsMonitor<CargoChainConfiguration> optionsMonitor, ILogger<CargoChainService> logger) 
-            : base(optionsMonitor, logger) { }
+        public CargoChainService(CargoChainConfiguration cargoChainConfiguration, ILogger<CargoChainService> logger) 
+            : base(cargoChainConfiguration, logger) { }
 
         public async Task<ProfileResponse> CreateProductProfile(Product product)
         {
@@ -19,7 +18,7 @@ namespace eShop.Shop.Data
                 new CreateProfilesRequest
                 {
                     Alias = product.Id.ToString(),
-                    ProfileType = "eShopProduct",
+                    ProfileType = ProfileTypes.Product,
                     Events = new EventRequest[]
                     {
                         GetProductInformationEventRequest(product),
@@ -63,7 +62,7 @@ namespace eShop.Shop.Data
                     {
                         new EventRequest
                         {
-                            EventType = "DeliveryAddress",
+                            EventType = ProductEventTypes.DeliveryAddress,
                             Visibility = EventVisibility.Public,
                             Properties = new EventPropertyRequest[]
                             {
@@ -89,7 +88,7 @@ namespace eShop.Shop.Data
         {
             return new EventRequest
             {
-                EventType = "ProductInformation",
+                EventType = ProductEventTypes.ProductInformation,
                 Visibility = EventVisibility.Public,
                 Properties = new EventPropertyRequest[]
                 {
@@ -119,7 +118,7 @@ namespace eShop.Shop.Data
         {
             return new EventRequest
             {
-                EventType = "ProductState",
+                EventType = ProductEventTypes.ProductState,
                 Visibility = EventVisibility.Public,
                 Properties = new EventPropertyRequest[]
                 {

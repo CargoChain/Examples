@@ -20,12 +20,29 @@ namespace eShop.Carrier
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CargoChainConfiguration>(Configuration.GetSection("CargoChain"));
+            CargoChainConfiguration cargoChainConfiguration = new CargoChainConfiguration();
+            Configuration.GetSection("CargoChain").Bind(cargoChainConfiguration);
+            services.AddSingleton(cargoChainConfiguration);
 
             services.AddSingleton<CarrierContext>();
             services.AddSingleton<CargoChainService>();
 
             services.AddControllersWithViews();
+
+            services.AddCors(options =>
+            {
+                //options.AddPolicy("CargoChainSpecificOrigin", 
+                //    builder => builder
+                //        .WithOrigins(cargoChainConfiguration.ApiUrl.ToString())
+                //        .AllowAnyHeader()
+                //        .AllowAnyMethod());
+
+                options.AddPolicy("AnyOriginPolicy",
+                    builder => builder
+                        .AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +68,8 @@ namespace eShop.Carrier
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.UseCors();
 
             lifetime.ApplicationStarted.Register(async () => await service.EnsureProfilesSubscription());
         }

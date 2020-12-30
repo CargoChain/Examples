@@ -1,4 +1,5 @@
-﻿using System;
+﻿using eShop.Lib;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -14,5 +15,6 @@ namespace eShop.Carrier.Models
         public ProductState State { get; set; }
         public string CargoChainProfilePublicId { get; set; }
         public string CargoChainProfileSecretId { get; set; }
+        public string CargoChainLastEvent { get; set; }
     }
 }
