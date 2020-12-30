@@ -1,0 +1,62 @@
+﻿@model eShop.Carrier.Models.Product
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div>
+    <h1 class="display-4">Details</h1>
+
+    <div class="card text-dark bg-light mt-4">
+        <div class="card-body">
+            <h5 class="card-title">Product details</h5>
+            <div class="row">
+                <div class="col-6">
+                    <label class="font-weight-bold text-muted mb-1">Name</label>
+                    <p>@Model.Name</p>
+                </div>
+                <div class="col-6">
+                    <label class="font-weight-bold text-muted mb-1">Status</label>
+                    <p>
+                        <span class="badge @(Model.State == eShop.Lib.ProductState.Available ? "bg-primary" : (Model.State == eShop.Lib.ProductState.Ordered ? "bg-warning" : "bg-success"))">@Model.State</span>
+                    </p>
+                </div>
+            </div>
+
+            <label class="font-weight-bold text-muted mb-1">Delivery Address</label>
+            <p class="mb-0">
+                <textarea class="form-control border-0 bg-transparent p-0">@Model.DeliveryAddress</textarea>
+            </p>
+        </div>
+    </div>
+
+    <div class="row align-items-center mt-4">
+        <h3 class="col-sm-8">Position history</h3>
+        <div class="col-sm-4 text-right">
+            <a class="btn btn-primary" asp-area="" asp-controller="Home" asp-action="AddPosition" asp-route-id="@Model.Id">Add product position</a>
+        </div>
+    </div>
+
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>Position</th>
+                <th>Temperature (°C)</th>
+                <th>At</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Positions != null)
+            {
+                @foreach (var position in Model.Positions.OrderBy(x => x.PositionAt))
+                {
+                    <tr>
+                        <td>@position.Position</td>
+                        <td>@position.Temperature</td>
+                        <td>@position.PositionAt</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

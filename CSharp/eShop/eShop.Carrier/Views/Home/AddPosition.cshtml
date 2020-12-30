@@ -1,0 +1,46 @@
+﻿@model eShop.Carrier.Models.ProductPositionViewModel
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
+
+@{
+    ViewData["Title"] = "Add product position";
+}
+
+<div>
+    <h1 class="display-4">Add product position</h1>
+
+    <form asp-action="AddPosition">
+        <div class="row mb-3 mt-4">
+            @Html.LabelFor(model => model.Position.Position, new { @class = "col-sm-2 col-form-label required" })
+            <div class="col-sm-10">
+                @Html.TextAreaFor(model => model.Position.Position, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Position.Position, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            @Html.LabelFor(model => model.Position.Temperature, "Temperature (in °C)", new { @class = "col-sm-2 col-form-label" })
+            <div class="col-sm-10">
+                @Html.TextBoxFor(model => model.Position.Temperature, new { @class = "form-control", @type = "number", min = "0", step = ".01" })
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-sm-10 offset-2">
+                <div class="form-check">
+                    @Html.CheckBoxFor(model => model.Position.ProductDelivered, new { @class = "form-check-input" })
+                    @Html.LabelFor(model => model.Position.ProductDelivered, "Has the product been delivered at this position?", new { @class = "form-check-label" })
+                </div>
+            </div>
+        </div>
+        
+        @Html.HiddenFor(model => model.Product.Id)
+
+        <div class="form-group text-right">
+            <a class="btn btn-light" asp-area="" asp-controller="Home" asp-action="Details" asp-route-id="@Model.Product.Id">Cancel</a>
+            <input type="submit" value="Add" class="btn btn-primary" />
+        </div>
+    </form>
+</div>

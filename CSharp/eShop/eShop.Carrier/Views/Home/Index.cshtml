@@ -1,8 +1,36 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<eShop.Carrier.Models.Product>
+
+@{
+    ViewData["Title"] = "Ordered Products";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div>
+    <h1 class="display-4">Ordered Products</h1>
+
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th style="width: 35%">Name</th>
+                <th style="width: 15%">Status</th>
+                <th style="width: 25%">CargoChain Public Id</th>
+                <th style="width: 25%"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>
+                        <span class="badge @(product.State == eShop.Lib.ProductState.Available ? "bg-primary" : (product.State == eShop.Lib.ProductState.Ordered ? "bg-warning" : "bg-success"))">@product.State</span>
+                    </td>
+                    <td>@product.CargoChainProfilePublicId</td>
+                    <td class="text-right">
+                        <a class="mr-3 font-weight-bold" asp-area="" asp-controller="Home" asp-action="Details" asp-route-id="@product.Id">Details</a>
+                        <a target="_blank" href="@(ViewBag.PublicViewUrl + product.CargoChainProfilePublicId)">View in CargoChain</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>

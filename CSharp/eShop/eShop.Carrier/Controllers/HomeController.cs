@@ -24,16 +24,52 @@ namespace eShop.Carrier.Controllers
         public IActionResult Index()
         {
             var products = _context.Products
-                .Find(x => x.State != Lib.ProductState.Available)
+                .Find(x => x.State == Lib.ProductState.Ordered)
                 .OrderBy(x => x.Name)
                 .ToList();
 
             return View(products);
         }
 
-        public IActionResult Privacy()
+        public IActionResult Delivered()
         {
-            return View();
+            var products = _context.Products
+                .Find(x => x.State == Lib.ProductState.Delivered)
+                .OrderBy(x => x.Name)
+                .ToList();
+
+            return View(products);
+        }
+
+        public IActionResult Details(Guid id)
+        {
+            var product = _context.Products.FindById(id);
+            return View(product);
+        }
+
+        public IActionResult AddPosition(Guid id)
+        {
+            var product = _context.Products.FindById(id);
+            var model = new ProductPositionViewModel { Product = product, Position = new ProductPosition() };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddPosition(ProductPositionViewModel model)
+        {
+            var dbProduct = _context.Products.FindById(model.Product.Id);
+            if (dbProduct.Positions == null)
+            {
+                dbProduct.Positions = new List<ProductPosition>();
+            }
+            model.Position.Id = Guid.NewGuid();
+            model.Position.PositionAt = DateTimeOffset.Now;
+            dbProduct.Positions.Add(model.Position);
+
+            _context.Products.Update(dbProduct);
+
+            return RedirectToAction(nameof(Details), new { id = model.Product.Id });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
