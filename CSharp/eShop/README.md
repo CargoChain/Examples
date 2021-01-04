@@ -30,9 +30,14 @@ State | Description
 Here is a full example that demonstrates how the _eShop_ applications work.
 
 #### Add a new product (Shop app)
-
-
+First, you have to access to the Shop home page. In this example, no product has been added yet.
 ![Shop index](./images/01_shop_index.jpg)
+
+Then you can add a new product by clicking the **Add new product** button
+![Add product form](./images/02_shop_add_product.jpg)
+
+The product has been added in the Shop app
+![Product added](./images/03_shop_product_added.jpg)
 
 
 ## Visual Studio solution
