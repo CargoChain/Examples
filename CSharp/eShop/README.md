@@ -19,13 +19,15 @@ The *eShop* example is based on two web applications:
 - **The Shop app**: the user can add products and order them
 - **The Carrier app**: when a product is ordered, the carrier user can specify the position of the product (and also an optional temperature) and can specify that the product has been delivered.
 
-### Application workflow
-The workflow of the application is essentially based on the state of a product:
+### Applications workflow
+The workflow of the applications is essentially based on the state of a product:
 State | Description
 ---- | ----
 `Available` | the product has been created and can be ordered by the user
 `Ordered` | the product has been ordered and the carrier has to deliver it
 `Delivered`| the product has been delivered to the buyer
+
+1. Add a product....
 
 
 ## Visual Studio solution
