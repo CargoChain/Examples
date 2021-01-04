@@ -1,4 +1,4 @@
-﻿namespace eShop.Carrier.Models
+﻿namespace eShop.Lib
 {
     public class CargoChainSubscription
     {

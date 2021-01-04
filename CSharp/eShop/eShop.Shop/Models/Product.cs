@@ -18,5 +18,6 @@ namespace eShop.Shop.Models
         public ProductState State { get; set; }
         public string CargoChainProfilePublicId { get; set; }
         public string CargoChainProfileSecretId { get; set; }
+        public string CargoChainLastEvent { get; set; }
     }
 }

@@ -58,6 +58,7 @@ namespace eShop.Shop.Controllers
             product.CargoChainProfileSecretId = cargoChainProfile.ProfileSecretId;
 
             _context.Products.Insert(product);
+            _context.Products.EnsureIndex(x => x.CargoChainProfilePublicId);
 
             return RedirectToAction(nameof(Index));
         }

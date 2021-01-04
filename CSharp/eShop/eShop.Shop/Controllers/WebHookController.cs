@@ -1,12 +1,13 @@
-﻿using eShop.Carrier.Data;
-using eShop.Carrier.Models;
-using eShop.Lib;
+﻿using eShop.Lib;
+using eShop.Shop.Data;
+using eShop.Shop.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace eShop.Carrier.Controllers
+namespace eShop.Shop.Controllers
 {
     [Route("hook")]
     [ApiController]
@@ -14,12 +15,14 @@ namespace eShop.Carrier.Controllers
     public class WebHookController : ControllerBase
     {
         private readonly CargoChainService _cargoChainService;
-        private readonly CarrierContext _context;
+        private readonly ShopContext _context;
+        private readonly ILogger<WebHookController> _logger;
 
-        public WebHookController(CargoChainService cargoChainService, CarrierContext context)
+        public WebHookController(CargoChainService cargoChainService, ShopContext context, ILogger<WebHookController> logger)
         {
             _cargoChainService = cargoChainService;
             _context = context;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -31,19 +34,8 @@ namespace eShop.Carrier.Controllers
 
                 if (dbProduct == null)
                 {
-                    // New product
-                    var profile = await _cargoChainService.GetProfileByPublicId(request.ProfilePublicId);
-                    dbProduct = new Product()
-                    {
-                        Id = Guid.NewGuid(),
-                        CargoChainProfilePublicId = profile.ProfilePublicId,
-                        CargoChainProfileSecretId = profile.ProfileSecretId
-                    };
-
-                    await SyncProductFromCargoChain(dbProduct);
-
-                    _context.Products.Insert(dbProduct);
-                    _context.Products.EnsureIndex(x => x.CargoChainProfilePublicId);
+                    // Unknown product -> error, we should know it
+                    _logger.LogError("Unknown profile with Public ID: " + request.ProfilePublicId);
                 }
                 else
                 {
@@ -62,14 +54,10 @@ namespace eShop.Carrier.Controllers
             {
                 switch (evt.EventBody.EventType)
                 {
-                    case ProductEventTypes.ProductInformation:
-                        dbProduct.Name = _cargoChainService.GetPropertyValue(evt, "Name");
-                        break;
-                    case ProductEventTypes.DeliveryAddress:
-                        dbProduct.DeliveryAddress = _cargoChainService.GetPropertyValue(evt, "DeliveryAddress");
-                        break;
                     case ProductEventTypes.ProductState:
-                        dbProduct.State = Enum.Parse<ProductState>(_cargoChainService.GetPropertyValue(evt, "State"));
+                        var newState = Enum.Parse<ProductState>(_cargoChainService.GetPropertyValue(evt, "State"));
+                        if (newState == ProductState.Delivered)
+                            dbProduct.State = Enum.Parse<ProductState>(_cargoChainService.GetPropertyValue(evt, "State"));
                         break;
                 }
 

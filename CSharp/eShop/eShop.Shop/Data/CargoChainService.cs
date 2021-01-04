@@ -8,8 +8,13 @@ namespace eShop.Shop.Data
 {
     public class CargoChainService : CargoChainServiceBase
     {
-        public CargoChainService(CargoChainConfiguration cargoChainConfiguration, ILogger<CargoChainService> logger) 
-            : base(cargoChainConfiguration, logger) { }
+        private readonly ShopContext _context;
+
+        public CargoChainService(CargoChainConfiguration cargoChainConfiguration, ILogger<CargoChainService> logger, ShopContext context) 
+            : base(cargoChainConfiguration, logger) 
+        {
+            _context = context;
+        }
 
         public async Task<ProfileResponse> CreateProductProfile(Product product)
         {
@@ -63,6 +68,23 @@ namespace eShop.Shop.Data
             ValidateCargoChainApiResponse(addEventResult, nameof(OrderProductProfile));
 
             return addEventResult.Data[0];
+        }
+
+        public async Task EnsureProfilesSubscription()
+        {
+            if (_context.Subscriptions.Count() == 0)
+            {
+                // Create profile subscription
+                var response = await ApiClient.Profile.RegisterProfileHook(new RegisterProfileHookRequest
+                {
+                    EventTypes = new string[] { ProductEventTypes.ProductState },
+                    Uri = CargoChainConfiguration.WebHookUrl.ToString()
+                });
+
+                ValidateCargoChainApiResponse(response, nameof(EnsureProfilesSubscription));
+
+                _context.Subscriptions.Insert(new CargoChainSubscription { SubscriptionId = response.Data.Id });
+            }
         }
 
         private EventRequest GetProductInformationEventRequest(Product product)

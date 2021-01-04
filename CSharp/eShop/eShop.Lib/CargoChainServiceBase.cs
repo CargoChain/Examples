@@ -35,6 +35,32 @@ namespace eShop.Lib
             InitializeApiClient();
         }
 
+        public async Task<ProfileResponse> GetProfileByPublicId(string profilePublicId)
+        {
+            var response = await ApiClient.Profile.GetProfileByPublicId(new GetProfileByPublicIdRequest
+            {
+                ProfilePublicId = profilePublicId
+            });
+
+            ValidateCargoChainApiResponse(response, nameof(GetProfileByPublicId));
+
+            return response.Data;
+        }
+
+        public async Task<EventResponse[]> GetEvents(string profileSecretId, string lastEvent)
+        {
+            var response = await ApiClient.Profile.GetEvents(new GetEventsRequest
+            {
+                Count = 100,
+                LastEvent = lastEvent,
+                ProfileSecretId = profileSecretId
+            });
+
+            ValidateCargoChainApiResponse(response, nameof(GetEvents));
+
+            return response.Data;
+        }
+
         public async Task<AddEventsResponse> UpdateProfileState(string profileSecretId, ProductState state)
         {
             var addEventResult = await ApiClient.Profile.AddEvents(new AddEventsRequest[]

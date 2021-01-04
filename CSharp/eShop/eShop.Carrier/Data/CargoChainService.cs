@@ -2,8 +2,6 @@
 using eShop.Carrier.Models;
 using eShop.Lib;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
 using System.Threading.Tasks;
 
 namespace eShop.Carrier.Data
@@ -16,32 +14,6 @@ namespace eShop.Carrier.Data
             : base(cargoChainConfiguration, logger) 
         {
             _carrierContext = carrierContext;
-        }
-
-        public async Task<ProfileResponse> GetProfileByPublicId(string profilePublicId)
-        {
-            var response = await ApiClient.Profile.GetProfileByPublicId(new GetProfileByPublicIdRequest
-            {
-                ProfilePublicId = profilePublicId
-            });
-
-            ValidateCargoChainApiResponse(response, nameof(GetProfileByPublicId));
-
-            return response.Data;
-        }
-
-        public async Task<EventResponse[]> GetEvents(string profileSecretId, string lastEvent)
-        {
-            var response = await ApiClient.Profile.GetEvents(new GetEventsRequest
-            {
-                Count = 100,
-                LastEvent = lastEvent,
-                ProfileSecretId = profileSecretId
-            });
-
-            ValidateCargoChainApiResponse(response, nameof(GetEvents));
-
-            return response.Data;
         }
 
         public async Task<AddEventsResponse> AddProductPosition(string profileSecretId, ProductPosition position)

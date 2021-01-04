@@ -1,4 +1,5 @@
-﻿using eShop.Shop.Models;
+﻿using eShop.Lib;
+using eShop.Shop.Models;
 using LiteDB;
 using System;
 
@@ -9,6 +10,7 @@ namespace eShop.Shop.Data
         private readonly LiteDatabase _db;
 
         public ILiteCollection<Product> Products => _db.GetCollection<Product>("products");
+        public ILiteCollection<CargoChainSubscription> Subscriptions => _db.GetCollection<CargoChainSubscription>("subscriptions");
 
         public ShopContext()
         {
