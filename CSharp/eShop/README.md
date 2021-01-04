@@ -27,7 +27,12 @@ State | Description
 `Ordered` | the product has been ordered and the carrier has to deliver it
 `Delivered`| the product has been delivered to the buyer
 
-1. Add a product....
+Here is a full example that demonstrates how the _eShop_ applications work.
+
+#### Add a new product (Shop app)
+
+
+![Shop index](./images/01_shop_index.jpg)
 
 
 ## Visual Studio solution
