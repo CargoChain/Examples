@@ -27,6 +27,7 @@ out/
 .build
 .docker
 .data
+.DS_Store
 _temp_docker
 packages
 _Temp
