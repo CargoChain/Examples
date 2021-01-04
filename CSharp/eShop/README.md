@@ -144,10 +144,29 @@ For the CargoChain URL, please read the [Locations](https://github.com/CargoChai
 
 ### CargoChain Setup
 The easiest way to setup the applications in CargoChain is to use the Portal frontend.
-1. Access and connect to the CargoChain portal
+1. Access and connect to the [CargoChain portal](https://portal-tests.cargochain.com/).
+2. Click on the **Developed applications** link in the navigation bar.
+3. Click on the **Register application** button.
+4. Enter the application details. You can enter only the name of the application. For example, **[MyOrganization] - eShop Shop** for the Shop application and **[MyOrganization] - eShop Carrier** for the Carrier application (replace the [MyOrganization] with your own organization).
+5. Once you click the **Register your application** button, the `ClientId` and the `ClientSecret` for this application is shown. Copy and paste these values in the corresponding `appsettings.json` file.
+6. Repeat the steps 3 to 5 for the Carrier application.
+7. Click on the **My Organisation** item in the navigation bar.
+8. Click on the **Application Authorizations** tab.
+9. Click on the **Authorize Application** button.
+10. Select the Shop application from the list (**[MyOrganization] - eShop Shop**).
+11. Select for example your user from the **RunAs Users** dropdown list. In this case, the application will be authenticated with your account. Of course, you can select another account if you have multiple users in your organisation.
+12. Click on the "Authorize Application** button
+13. The application must appear in the list of **Application Authorizations**.
+14. Click the **Show Run As Keys** link. A key is displayed. Copy and paste this key in the corresponding `appsettings.json` file.
+15. Repeat the steps 9 to 14 for the Carrier application.
 
+### CORS setup
+> By default, CargoChain won't be able to call the Web Hook, because the origin of the HTTP request is different. The `/hook` endpoint should enable CORS for CargoChain in order to accept the request from https://api2-tests.cargochain.com. This feature has not been correctly tested. Don't hesitate to contact us by creating for example an [issue in GitHub](https://github.com/CargoChain/doc/issues) if you can't setup CORS in the Shop and Carrier applications.
 
 ### Server deployment with public access
+If you deploy the applications on your own servers, you have to be sure that CargoChain can contact the applications for the subscriptions. Be sure to update the `WebHookUrl` parameter for both applications. It's not possible to update the URL of a subscription afterwards. If needed,
+you have to delete the local database (shop.db or carrier.db).
 
 ### localhost public access
- 
+You can also run the applications from Visual Studio. IIS Express will host the applications. For the subscription, CargoChain has to be able to call the application from Internet. For that, you have to make your local environment public. A solution is to use for example http://localhost.run/.
+> This solution has not been tested by us yet. Don't hesitate to contact us by creating for example an [issue in GitHub](https://github.com/CargoChain/doc/issues).
