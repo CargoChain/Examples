@@ -116,7 +116,12 @@ By clicking the **View Ledger** link, a visual representation of the CargoChain 
 ![Carrier product details](./images/16_cargochain_profile_ledger.jpg)
 
 ## Visual Studio solution
-
+The source code is split into 3 projects:
+Project | Description
+---- | ----
+eShop.Shop | The Shop web application
+eShop.Carrier | The Carrier web application
+eShop.Lib | Source code that is common to the Shop and Carrier apps
 
 ## How to run the eShop example
 
