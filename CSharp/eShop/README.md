@@ -124,8 +124,28 @@ eShop.Carrier | The Carrier web application
 eShop.Lib | Source code that is common to the Shop and Carrier apps
 
 ## How to run the eShop example
+You can run this example on your own environment. For that, you have to clone this GitHub project and you will
+have to configure the apps.
+
+The Shop and the Carrier apps have an `appsettings.json` file in order to setup them. You have to update the `CargoChain` 
+section.
+
+Property | Description
+---- | ----
+`ClientId` | The public identifier for the app. We will see later how to get this value.
+`ClientSecret` | A secret known only to the app and the CargoChain portal.
+`RunAsKey` | A secret key that allows to run the application as a specific user. This key is used to get an access token.
+`PortalUrl` | The URL of the CargoChain portal (https://portal-tests.cargochain.com)
+`ApiUrl` | The URL of the CargoChain API (https://api2-tests.cargochain.com)
+`PublicViewUrl` | The URL of the profile public view (https://www2-tests.cargochain.com)
+`WebHookUrl` | The URL that has to be called by CargoChain for the application subscription (Web Hook). Has to finish with `/hook`.
+
+For the CargoChain URL, please read the [Locations](https://github.com/CargoChain/doc/wiki#locations) section in the CargoChain documentation.
 
 ### CargoChain Setup
+The easiest way to setup the applications in CargoChain is to use the Portal frontend.
+1. Access and connect to the CargoChain portal
+
 
 ### Server deployment with public access
 
