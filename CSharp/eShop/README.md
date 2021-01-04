@@ -31,13 +31,38 @@ Here is a full example that demonstrates how the _eShop_ applications work.
 
 #### Add a new product (Shop app)
 First, you have to access to the Shop home page. In this example, no product has been added yet.
+
 ![Shop index](./images/01_shop_index.jpg)
 
-Then you can add a new product by clicking the **Add new product** button
+Then you can add a new product by clicking the **Add new product** button.
+
 ![Add product form](./images/02_shop_add_product.jpg)
 
-The product has been added in the Shop app
+The product has been added in the Shop app.
+
 ![Product added](./images/03_shop_product_added.jpg)
+
+#### Product profile in CargoChain
+When a product is created in the Shop application, we also create a profile in CargoChain. The **View in CargoChain** link allow
+to view this profile in CargoChain.
+
+![Product added](./images/04_cargochain_view_profile.jpg)
+
+#### Order a product (Shop app)
+The user can order a product by clicking the **Order** link. Then, (s)he has to specify a delivery address.
+
+![Order product](./images/05_shop_order_confirmation.jpg)
+
+Once the button **Confirm your order** is clicked, the status of the product changes.
+
+![Order product](./images/06_shop_product_ordered.jpg)
+
+#### Product synchronization (Carrier app)
+The Carrier application uses a CargoChain _subscription_ (web hook) in order to receive a notification when the status of a product has changed (based on the **ProductState** event that is pushed in CargoChain by the Shop application). When the Carrier application gets this notification, it can get the events that have been pushed in CargoChain in order to re-create the product in its own local database.
+
+The product is now accessible in the Carrier application.
+
+![Carrier index](./images/07_carrier_index.jpg)
 
 
 ## Visual Studio solution
