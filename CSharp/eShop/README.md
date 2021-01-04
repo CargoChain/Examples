@@ -170,3 +170,6 @@ you have to delete the local database (shop.db or carrier.db).
 ### localhost public access
 You can also run the applications from Visual Studio. IIS Express will host the applications. For the subscription, CargoChain has to be able to call the application from Internet. For that, you have to make your local environment public. A solution is to use for example http://localhost.run/.
 > This solution has not been tested by us yet. Don't hesitate to contact us by creating for example an [issue in GitHub](https://github.com/CargoChain/doc/issues).
+
+## Tips
+The best way to understand the integration between the Shop/Carrier app and CargoChain is to read and try to understand the `CargoChainService` classes.
