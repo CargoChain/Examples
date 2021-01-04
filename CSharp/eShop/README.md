@@ -42,11 +42,20 @@ The product has been added in the Shop app.
 
 ![Product added](./images/03_shop_product_added.jpg)
 
+The Shop application (same for the Carrier application) uses a local database (LiteDB) mainly for storing the products. **But for each
+product, we create a profile in CargoChain. It allows to communicate between the Shop and the Carrier applications. These applications
+don't share their local database.**
+
 #### Product profile in CargoChain
 When a product is created in the Shop application, we also create a profile in CargoChain. The **View in CargoChain** link allow
 to view this profile in CargoChain.
 
-![Product added](./images/04_cargochain_view_profile.jpg)
+![CargoChain Profile](./images/04_cargochain_view_profile.jpg)
+
+We can see that 3 events have been pushed in CargoChain. The **Created** event is automatically pushed when a new profile is created in CargoChain.
+The 2 other events are custom events pushed by the Shop application:
+- `ProductInformation`: this event is pushed in order to share the product details (the name, description and price).
+- `ProductState`: pushed each time the status of the profile changed.
 
 #### Order a product (Shop app)
 The user can order a product by clicking the **Order** link. Then, (s)he has to specify a delivery address.
