@@ -57,7 +57,7 @@ namespace eShop.Shop.Controllers
                     case ProductEventTypes.ProductState:
                         var newState = Enum.Parse<ProductState>(_cargoChainService.GetPropertyValue(evt, "State"));
                         if (newState == ProductState.Delivered)
-                            dbProduct.State = Enum.Parse<ProductState>(_cargoChainService.GetPropertyValue(evt, "State"));
+                            dbProduct.State = newState;
                         break;
                 }
 

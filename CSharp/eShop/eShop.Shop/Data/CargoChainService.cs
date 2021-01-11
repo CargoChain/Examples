@@ -104,7 +104,7 @@ namespace eShop.Shop.Data
                     new EventPropertyRequest
                     {
                         DataType = "text",  
-                        Value = product.Description,
+                        Value = product.Description ?? "",
                         Name = "Description"
                     },
                     new EventPropertyRequest
