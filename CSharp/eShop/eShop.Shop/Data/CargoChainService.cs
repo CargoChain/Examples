@@ -54,7 +54,7 @@ namespace eShop.Shop.Data
                             {
                                 new EventPropertyRequest
                                 {
-                                    DataType = "address",
+                                    DataType = EventPropertyDataTypes.Address,
                                     Value = product.DeliveryAddress,
                                     Name = "DeliveryAddress"
                                 }
@@ -97,19 +97,19 @@ namespace eShop.Shop.Data
                 {
                     new EventPropertyRequest
                     {
-                        DataType = "text",
+                        DataType = EventPropertyDataTypes.Text,
                         Value = product.Name,
                         Name = "Name"
                     },
                     new EventPropertyRequest
                     {
-                        DataType = "text",  
+                        DataType = EventPropertyDataTypes.Text,
                         Value = product.Description ?? "",
                         Name = "Description"
                     },
                     new EventPropertyRequest
                     {
-                        DataType = "decimal",
+                        DataType = EventPropertyDataTypes.Decimal,
                         Value = product.Price.ToString(),
                         Name = "Price"
                     }

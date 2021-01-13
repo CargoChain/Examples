@@ -33,25 +33,25 @@ namespace eShop.Carrier.Data
                             {
                                 new EventPropertyRequest
                                 {
-                                    DataType = "address",
+                                    DataType = EventPropertyDataTypes.Address,
                                     Value = position.Position,
                                     Name = "Position"
                                 },
                                 new EventPropertyRequest
                                 {
-                                    DataType = "temperature",
+                                    DataType = EventPropertyDataTypes.Temperature,
                                     Value = position.Temperature + " °C",
                                     Name = "Temperature"
                                 },
                                 new EventPropertyRequest
                                 {
-                                    DataType = "datetime",
+                                    DataType = EventPropertyDataTypes.Datetime,
                                     Value = position.PositionAt.ToString("yyyy-MM-ddTHH:mm:sszzz"),
                                     Name = "PositionAt"
                                 },
                                 new EventPropertyRequest
                                 {
-                                    DataType = "bool",
+                                    DataType = EventPropertyDataTypes.Bool,
                                     Value = position.ProductDelivered.ToString(),
                                     Name = "ProductDelivered"
                                 }

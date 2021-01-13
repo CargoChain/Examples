@@ -105,7 +105,7 @@ namespace eShop.Lib
                 {
                     new EventPropertyRequest
                     {
-                        DataType = "text",
+                        DataType = EventPropertyDataTypes.Text,
                         Value = state.ToString(),
                         Name = "State"
                     }
