@@ -51,7 +51,7 @@ namespace eShop.Lib
         {
             var response = await ApiClient.Profile.GetEvents(new GetEventsRequest
             {
-                Count = 100,
+                PageSize = 100,
                 LastEvent = lastEvent,
                 ProfileSecretId = profileSecretId
             });
